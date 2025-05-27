@@ -1,9 +1,12 @@
-name: Deploy CardConnect Hub
+name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
-  workflow_dispatch:
+    branches:
+      - main  # or your default branch name
+
+permissions:
+  contents: write
 
 jobs:
   build-and-deploy:
@@ -22,10 +25,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
       
-      - name: Build and export
+      - name: Build project
         run: npm run build
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          # Add other environment variables
       
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4

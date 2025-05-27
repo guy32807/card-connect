@@ -1,10 +1,7 @@
-// If this file exists, you need to modify or remove it for static export
+import { NextRequest } from 'next/server';
 
-// Option 1: Remove this file entirely if you're committed to static export
-
-// Option 2: Conditionally execute middleware only in non-export environments
-// This won't work for static export but keeps the file for other deployment methods
-export function middleware(req) {
+// This won't work for static export but keeps the file for deployment on Vercel
+export function middleware(req: NextRequest) {
   // This code won't run in static export mode
   // Your middleware logic here
 }
