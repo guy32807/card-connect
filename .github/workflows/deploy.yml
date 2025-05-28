@@ -11,49 +11,45 @@ permissions:
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+# Allow one concurrent deployment
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 jobs:
+  # Build job
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      - name: Setup Node
+        
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: '18'
           cache: 'npm'
-
-      - name: Install Dependencies
+          
+      - name: Install dependencies
         run: npm ci
-
-      # Add a step to manually create files directory if needed
-      - name: Create output directory
-        run: mkdir -p ./out
-
-      - name: Build Project
+        
+      - name: Build with Next.js
         run: npm run build
         env:
-          # Updated base path for GitHub Pages deployment
           NEXT_PUBLIC_BASE_PATH: '/card-connect'
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           
-      - name: Configure Pages
+      - name: Setup Pages
+        id: pages
         uses: actions/configure-pages@v3
         
-      # Update to use the latest version with specific version number
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v2
         with:
           path: ./out
 
+  # Deployment job
   deploy:
     environment:
       name: github-pages
@@ -63,4 +59,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v3
