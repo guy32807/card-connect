@@ -70,13 +70,11 @@ export default function ProperlyStoreCardCollection() {
     <article className="max-w-4xl mx-auto px-4 py-12">
       {/* Featured Image */}
       <div className="relative w-full h-80 mb-8 rounded-xl overflow-hidden">
-        <PlaceholderImage 
-          src={imagePaths.header}
-          alt="Professional sports card storage methods" 
+        <AppImage 
+          src="/images/blog/card-storage-header.jpg"
+          alt="Card Storage Guide"
           fill
-          priority
           className="object-cover"
-          placeholderType="sports-card"
         />
       </div>
       

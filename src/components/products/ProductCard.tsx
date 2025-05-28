@@ -23,9 +23,9 @@ export default function ProductCard({ product }: ProductCardProps) {
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-all hover:shadow-lg">
       <div className="relative h-64">
         <AppImage 
-          src={product.image} 
+          src={product.image || '/images/placeholder.jpg'} // Provide fallback
           alt={product.title}
-          fill
+          fill  // Using fill because we have a container with fixed height
           className="object-cover"
         />
       </div>

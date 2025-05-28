@@ -20,7 +20,7 @@ export default function BlogPostCard({ post }: BlogPostCardProps) {
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:-translate-y-1 hover:shadow-lg">
       <div className="relative h-48">
         <AppImage 
-          src={post.coverImage} 
+          src={post.coverImage || '/images/blog/default-cover.jpg'}
           alt={post.title} 
           fill
           className="object-cover"
