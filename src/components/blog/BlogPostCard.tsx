@@ -1,57 +1,54 @@
-import Link from 'next/link'
-import Image from 'next/image'
-import { BlogPost } from '@/core/domain/models/BlogPost'
+import AppImage from '@/components/shared/AppImage';
+import AppLink from '@/components/shared/AppLink';
+
+interface BlogPost {
+  id: string;
+  title: string;
+  excerpt: string;
+  coverImage: string;
+  slug: string;
+  date: string;
+  category: string;
+}
 
 interface BlogPostCardProps {
   post: BlogPost;
 }
 
 export default function BlogPostCard({ post }: BlogPostCardProps) {
-  const formattedDate = new Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  }).format(post.publishedDate)
-  
   return (
-    <div className="bg-white border border-gray-100 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-      <Link href={`/blog/${post.slug}`}>
-        <div className="relative h-48 w-full bg-blue-100">
-          {post.imageUrl ? (
-            <Image
-              src={post.imageUrl}
-              alt={post.title}
-              fill
-              className="object-cover"
-            />
-          ) : (
-            <div className="absolute inset-0 flex items-center justify-center bg-blue-100">
-              <span className="text-blue-900 font-bold">{post.title[0]}</span>
-            </div>
-          )}
-        </div>
-      </Link>
+    <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:-translate-y-1 hover:shadow-lg">
+      <div className="relative h-48">
+        <AppImage 
+          src={post.coverImage} 
+          alt={post.title} 
+          fill
+          className="object-cover"
+        />
+      </div>
       
       <div className="p-5">
-        <div className="flex items-center mb-3">
-          <span className="text-xs text-gray-500">{formattedDate}</span>
-          <span className="mx-2 text-gray-300">•</span>
-          <span className="text-xs font-medium text-blue-700">{post.tags[0]}</span>
-        </div>
+        <span className="inline-block px-3 py-1 text-xs font-semibold text-blue-800 bg-blue-100 rounded-full mb-3">
+          {post.category}
+        </span>
+        <AppLink href={`/blog/${post.slug}`}>
+          <h3 className="text-xl font-bold mb-2 text-gray-800 hover:text-blue-600">{post.title}</h3>
+        </AppLink>
+        <p className="text-gray-600 mb-4 line-clamp-2">{post.excerpt}</p>
         
-        <Link href={`/blog/${post.slug}`}>
-          <h3 className="font-semibold text-xl text-gray-800 mb-2 hover:text-blue-700 transition-colors">{post.title}</h3>
-        </Link>
-        
-        <p className="text-gray-600 text-sm mb-4 line-clamp-3">{post.excerpt}</p>
-        
-        <div className="flex items-center">
-          <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-800 font-bold text-sm">
-            {post.author[0]}
-          </div>
-          <span className="ml-2 text-sm font-medium text-gray-700">{post.author}</span>
+        <div className="flex items-center justify-between">
+          <time className="text-sm text-gray-500">{post.date}</time>
+          <AppLink 
+            href={`/blog/${post.slug}`}
+            className="text-blue-600 font-medium hover:text-blue-800 flex items-center"
+          >
+            Read more
+            <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </AppLink>
         </div>
       </div>
     </div>
-  )
+  );
 }

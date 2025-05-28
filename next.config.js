@@ -14,9 +14,17 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true
   },
-  // GitHub Pages doesn't support some features
+  // GitHub Pages doesn't support Next.js Image Optimization
   images: {
     unoptimized: true,
+    // Add domains for remote images if needed
+    domains: [],
+    // Ensure image paths include the base path
+    path: process.env.NODE_ENV === 'production' ? '/card-connect/_next/image' : '/_next/image',
+    // If using loaders, configure them properly
+    loader: 'default',
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   }
 }
 
