@@ -1,0 +1,13 @@
+<svg width="640" height="360" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="gradient-37sz3k" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#10b981" />
+        <stop offset="100%" stop-color="#059669" />
+      </linearGradient>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#gradient-37sz3k)"/>
+    <circle cx="275" cy="279" r="27" fill="white" opacity="0.11" /><rect x="368" y="0" width="21" height="10.5" rx="4" fill="white" opacity="0.32" /><polygon points="271,90 304,90 287.5,57" fill="white" opacity="0.14" /><circle cx="577" cy="36" r="29" fill="white" opacity="0.25" /><rect x="429" y="306" width="15" height="7.5" rx="4" fill="white" opacity="0.25" /><polygon points="18,357 37,357 27.5,338" fill="white" opacity="0.12" /><circle cx="44" cy="214" r="15" fill="white" opacity="0.27" /><rect x="318" y="49" width="38" height="19" rx="4" fill="white" opacity="0.05" /><polygon points="150,183 170,183 160,163" fill="white" opacity="0.30" /><circle cx="338" cy="59" r="22" fill="white" opacity="0.08" />
+    <rect width="200" height="8" x="220" y="150" fill="white" opacity="0.8"/>
+    <rect width="160" height="8" x="240" y="210" fill="white" opacity="0.6"/>
+    <text x="50%" y="50%" font-family="Arial" font-size="32" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="middle">Price Guide</text>
+  </svg>
