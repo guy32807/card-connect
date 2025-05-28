@@ -1,73 +1,72 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import ProductCard from '@/components/products/ProductCard'
-import { ProductRepository } from '@/infrastructure/repositories/ProductRepository'
-import { FetchProductsUseCase } from '@/core/usecases/FetchProductsUseCase'
-import { Product } from '@/core/domain/models/Product'
-import { motion } from 'framer-motion'
+import AppImage from '@/components/shared/AppImage';
 
 export default function ProductShowcase() {
-  const [products, setProducts] = useState<Product[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  const affiliateLink = "https://www.tkqlhce.com/click-9083409-15435040";
   
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const repository = new ProductRepository()
-      const useCase = new FetchProductsUseCase(repository)
-      
-      try {
-        const featuredProducts = await useCase.getFeaturedProducts()
-        setProducts(featuredProducts)
-      } catch (error) {
-        console.error('Error fetching products:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-    
-    fetchProducts()
-  }, [])
+  // Base64-encoded SVG placeholders as fallbacks
+  const placeholders = {
+    authentication: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQwIiBoZWlnaHQ9IjM2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiM0ZjQ2ZTUiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiM3YzNhZWQiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyYWQpIi8+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSI4IiB4PSIyMjAiIHk9IjE1MCIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuOCIvPjxyZWN0IHdpZHRoPSIxNjAiIGhlaWdodD0iOCIgeD0iMjQwIiB5PSIyMTAiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjYiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjMyIiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiPkF1dGhlbnRpY2F0aW9uPC90ZXh0Pjwvc3ZnPg==",
+    grading: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQwIiBoZWlnaHQ9IjM2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNmNTllMGIiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNkOTc3MDYiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyYWQpIi8+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSI4IiB4PSIyMjAiIHk9IjE1MCIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuOCIvPjxyZWN0IHdpZHRoPSIxNjAiIGhlaWdodD0iOCIgeD0iMjQwIiB5PSIyMTAiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjYiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjMyIiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiPkdyYWRpbmc8L3RleHQ+PC9zdmc+",
+    priceGuide: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQwIiBoZWlnaHQ9IjM2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImdyYWQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMxMGI5ODEiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwNTk2NjkiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyYWQpIi8+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSI4IiB4PSIyMjAiIHk9IjE1MCIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuOCIvPjxyZWN0IHdpZHRoPSIxNjAiIGhlaWdodD0iOCIgeD0iMjQwIiB5PSIyMTAiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjYiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjMyIiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiPlByaWNlIEd1aWRlPC90ZXh0Pjwvc3ZnPg=="
+  };
   
+  const products = [
+    {
+      title: "Beckett Authentication",
+      description: "Get your cards professionally authenticated by the industry's most trusted experts.",
+      image: "/images/products/authentication.jpg",
+      fallbackSrc: placeholders.authentication,
+      link: affiliateLink,
+    },
+    {
+      title: "Beckett Grading",
+      description: "Professional grading services to determine the condition and value of your cards.",
+      image: "/images/products/grading.jpg",
+      fallbackSrc: placeholders.grading,
+      link: affiliateLink,
+    },
+    {
+      title: "Price Guide Subscription",
+      description: "Access up-to-date pricing information for over 1 million sports cards.",
+      image: "/images/products/price-guide.jpg",
+      fallbackSrc: placeholders.priceGuide,
+      link: affiliateLink,
+    },
+  ];
+
   return (
-    <section className="py-16 bg-gray-50">
-      <div className="container mx-auto px-4">
+    <section className="section bg-gray-50">
+      <div className="container">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Featured Beckett Products</h2>
-          <p className="max-w-2xl mx-auto text-gray-600">Discover our handpicked selection of premium collectibles and services from Beckett Media.</p>
+          <h2 className="mb-4">Our Premium Services</h2>
+          <p className="text-gray max-w-2xl mx-auto">
+            Comprehensive solutions for collectors of all levels. From authentication and grading to pricing guides.
+          </p>
         </div>
         
-        {isLoading ? (
-          <div className="flex justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-900"></div>
-          </div>
-        ) : (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
-          >
-            {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </motion.div>
-        )}
-        
-        <div className="text-center mt-10">
-          <a 
-            href="https://www.tkqlhce.com/click-9083409-15435040" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="px-6 py-3 bg-blue-800 text-white font-medium rounded-md hover:bg-blue-700 transition-colors inline-flex items-center"
-          >
-            View All Products
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
-          </a>
+        <div className="grid grid-3">
+          {products.map((product, index) => (
+            <div key={index} className="card animate-fadeIn">
+              <div className="card-img-wrapper">
+                <img 
+                  src={product.fallbackSrc} 
+                  alt={product.title} 
+                  className="card-img"
+                />
+              </div>
+              <div className="card-body">
+                <h3 className="card-title">{product.title}</h3>
+                <p className="card-text">{product.description}</p>
+                <a href={product.link} className="btn btn-primary">
+                  Learn More
+                </a>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
-  )
+  );
 }

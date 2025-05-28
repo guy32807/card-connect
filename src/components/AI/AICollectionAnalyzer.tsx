@@ -1,100 +1,219 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { useState } from 'react';
 
 export default function AICollectionAnalyzer() {
-  const [collection, setCollection] = useState('')
-  const [analysis, setAnalysis] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [cardList, setCardList] = useState('');
+  const [analyzing, setAnalyzing] = useState(false);
+  const [results, setResults] = useState<any>(null);
+  const [error, setError] = useState('');
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError(null)
-    
-    try {
-      // Use the API route instead of direct client-side access
-      const response = await fetch('/api/analyze-collection', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ collection }),
-      })
-      
-      const data = await response.json()
-      
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to analyze collection')
-      }
-      
-      setAnalysis(data.analysis)
-    } catch (err: any) {
-      console.error('Error analyzing collection:', err)
-      setError(err.message || 'There was an error analyzing your collection. Please try again.')
-    } finally {
-      setLoading(false)
+  // Example function to analyze the collection
+  // In a real implementation, this would call your actual AI service
+  const analyzeCollection = async () => {
+    if (!cardList.trim()) {
+      setError('Please enter at least one card to analyze.');
+      return;
     }
-  }
-  
+
+    setAnalyzing(true);
+    setError('');
+
+    try {
+      // Simulate API call with timeout
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      // Parse the card list into individual cards
+      const cards = cardList
+        .split('\n')
+        .filter(line => line.trim().length > 0)
+        .map(line => line.trim());
+
+      // Simulate analysis results
+      const mockResults = {
+        cardCount: cards.length,
+        estimatedValue: Math.floor(Math.random() * 5000) + 500,
+        rarityDistribution: {
+          common: Math.floor(Math.random() * 30) + 20,
+          uncommon: Math.floor(Math.random() * 30) + 15,
+          rare: Math.floor(Math.random() * 20) + 5,
+          ultraRare: Math.floor(Math.random() * 5) + 1,
+        },
+        topCards: cards.slice(0, 3).map(card => ({
+          name: card,
+          estimatedValue: Math.floor(Math.random() * 200) + 50,
+          rarity: ['Common', 'Uncommon', 'Rare', 'Ultra Rare'][Math.floor(Math.random() * 4)],
+          condition: ['Poor', 'Fair', 'Good', 'Very Good', 'Excellent', 'Mint'][Math.floor(Math.random() * 6)],
+        })),
+        recommendations: [
+          "Consider getting your top cards professionally graded to increase their value.",
+          "Your collection has a good mix of common and rare cards.",
+          "Based on current market trends, now might be a good time to acquire more cards from the same series."
+        ]
+      };
+
+      setResults(mockResults);
+    } catch (err) {
+      setError('An error occurred while analyzing your collection. Please try again.');
+      console.error('Analysis error:', err);
+    } finally {
+      setAnalyzing(false);
+    }
+  };
+
+  const handleReset = () => {
+    setCardList('');
+    setResults(null);
+    setError('');
+  };
+
   return (
-    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl shadow-xl p-8 max-w-4xl mx-auto">
-      <div className="grid md:grid-cols-2 gap-8">
-        <div>
-          <h3 className="text-2xl font-bold text-blue-900 mb-4">AI Collection Analyzer</h3>
-          <p className="text-gray-600 mb-6">Upload your collection details or describe your cards for an AI-powered valuation and recommendations</p>
+    <div className="analyzer-container">
+      {!results ? (
+        <>
+          <div className="form-group">
+            <label htmlFor="cardList" className="form-label">
+              Enter your cards below (one card per line):
+            </label>
+            <div className="input-description text-sm text-gray mb-2">
+              Example: 2018 Panini Prizm Luka Doncic Rookie #280
+            </div>
+            <textarea
+              id="cardList"
+              className="form-control"
+              rows={6}
+              value={cardList}
+              onChange={(e) => setCardList(e.target.value)}
+              placeholder="Enter your card list here... 
+2018 Panini Prizm Luka Doncic Rookie #280
+1986 Fleer Michael Jordan Rookie #57
+2003 Topps Chrome LeBron James Rookie #111"
+              disabled={analyzing}
+            ></textarea>
+          </div>
           
-          <form onSubmit={handleSubmit} className="mb-6">
-            <textarea 
-              value={collection}
-              onChange={(e) => setCollection(e.target.value)}
-              placeholder="E.g., I have a 1986 Fleer Michael Jordan rookie card in PSA 8 condition, a 2003 Topps Chrome LeBron James rookie in BGS 9.5..."
-              className="w-full h-32 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-            <motion.button 
-              type="submit" 
-              disabled={loading || !collection}
-              className="mt-4 px-6 py-3 bg-blue-700 hover:bg-blue-800 text-white font-medium rounded-md disabled:opacity-50 w-full md:w-auto"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+          {error && <div className="error-message mb-4">{error}</div>}
+          
+          <div className="flex justify-center">
+            <button 
+              className="btn btn-primary"
+              onClick={analyzeCollection}
+              disabled={analyzing}
             >
-              {loading ? (
-                <div className="flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mr-2"></div>
+              {analyzing ? (
+                <>
+                  <span className="loading-spinner"></span>
                   Analyzing...
+                </>
+              ) : (
+                'Analyze Collection'
+              )}
+            </button>
+          </div>
+        </>
+      ) : (
+        <div className="analysis-results">
+          <div className="results-header">
+            <h4>Analysis Results</h4>
+            <p className="mb-4">Here's what our AI found in your collection:</p>
+          </div>
+
+          <div className="results-summary">
+            <div className="result-stat">
+              <div className="stat-label">Cards Analyzed</div>
+              <div className="stat-value">{results.cardCount}</div>
+            </div>
+            <div className="result-stat">
+              <div className="stat-label">Est. Value</div>
+              <div className="stat-value">${results.estimatedValue}</div>
+            </div>
+          </div>
+
+          <div className="mb-6">
+            <h5 className="mb-3">Rarity Distribution</h5>
+            <div className="rarity-bars">
+              <div className="rarity-bar-group">
+                <div className="rarity-label">Common</div>
+                <div className="rarity-bar-container">
+                  <div 
+                    className="rarity-bar common" 
+                    style={{width: `${results.rarityDistribution.common}%`}}
+                  ></div>
+                  <span className="rarity-percentage">{results.rarityDistribution.common}%</span>
                 </div>
-              ) : 'Analyze Collection'}
-            </motion.button>
-          </form>
-          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-        </div>
-        
-        <div>
-          {!analysis ? (
-            <div className="h-full flex items-center justify-center">
-              <div className="text-center">
-                <div className="mx-auto w-24 h-24 relative mb-4 bg-blue-100 rounded-full flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-blue-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                  </svg>
+              </div>
+              <div className="rarity-bar-group">
+                <div className="rarity-label">Uncommon</div>
+                <div className="rarity-bar-container">
+                  <div 
+                    className="rarity-bar uncommon" 
+                    style={{width: `${results.rarityDistribution.uncommon}%`}}
+                  ></div>
+                  <span className="rarity-percentage">{results.rarityDistribution.uncommon}%</span>
                 </div>
-                <p className="text-gray-500 text-sm">Enter your collection details to receive AI-powered insights</p>
+              </div>
+              <div className="rarity-bar-group">
+                <div className="rarity-label">Rare</div>
+                <div className="rarity-bar-container">
+                  <div 
+                    className="rarity-bar rare" 
+                    style={{width: `${results.rarityDistribution.rare}%`}}
+                  ></div>
+                  <span className="rarity-percentage">{results.rarityDistribution.rare}%</span>
+                </div>
+              </div>
+              <div className="rarity-bar-group">
+                <div className="rarity-label">Ultra Rare</div>
+                <div className="rarity-bar-container">
+                  <div 
+                    className="rarity-bar ultra-rare" 
+                    style={{width: `${results.rarityDistribution.ultraRare}%`}}
+                  ></div>
+                  <span className="rarity-percentage">{results.rarityDistribution.ultraRare}%</span>
+                </div>
               </div>
             </div>
-          ) : (
-            <motion.div 
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-white p-6 rounded-lg border border-blue-100 shadow-sm"
-            >
-              <h4 className="text-xl font-semibold text-blue-900 mb-4">Analysis Results</h4>
-              <p className="text-gray-700">{analysis}</p>
-            </motion.div>
+          </div>
+
+          {results.topCards.length > 0 && (
+            <div className="mb-6">
+              <h5 className="mb-3">Top Cards</h5>
+              <div className="top-cards">
+                {results.topCards.map((card: any, index: number) => (
+                  <div key={index} className="top-card">
+                    <div className="card-name">{card.name}</div>
+                    <div className="card-meta">
+                      <span className={`card-rarity ${card.rarity.toLowerCase().replace(' ', '-')}`}>
+                        {card.rarity}
+                      </span>
+                      <span className="card-condition">{card.condition}</span>
+                    </div>
+                    <div className="card-value">${card.estimatedValue}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
+
+          <div className="mb-6">
+            <h5 className="mb-3">Recommendations</h5>
+            <ul className="recommendations-list">
+              {results.recommendations.map((recommendation: string, index: number) => (
+                <li key={index}>{recommendation}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="flex justify-center">
+            <button 
+              className="btn btn-outline"
+              onClick={handleReset}
+            >
+              Analyze Another Collection
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
-  )
+  );
 }

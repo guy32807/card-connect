@@ -1,80 +1,87 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import AppLink from '@/components/shared/AppLink';
-import AppImage from '@/components/shared/AppImage';
-import { getBasePath } from '@/utils/path';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
-  const basePath = getBasePath();
+  
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
+  const isActive = (path: string) => {
+    return pathname === path ? 'active' : '';
+  };
 
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
-          <AppLink href="/" className="flex items-center">
-            <AppImage
-              src="/images/logo.png"  
-              alt="CardConnect Logo"
-              width={140}
-              height={40}
-              priority
-            />
-          </AppLink>
-
-          {/* Mobile menu button */}
-          <button
-            className="md:hidden focus:outline-none"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
+    <header className="header">
+      <div className="container">
+        <div className="navbar">
+          <Link href="/" className="logo">
+            CardConnect
+          </Link>
+          
+          <button 
+            className={`menu-toggle ${isMenuOpen ? 'active' : ''}`} 
+            onClick={toggleMenu}
+            aria-label="Toggle navigation menu"
           >
-            {/* Hamburger icon */}
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
-            </svg>
+            <span className="menu-toggle-bar"></span>
+            <span className="menu-toggle-bar"></span>
+            <span className="menu-toggle-bar"></span>
           </button>
-
-          {/* Desktop menu */}
-          <nav className="hidden md:flex items-center space-x-6">
-            <AppLink href="/" className={`text-gray-700 hover:text-blue-600 ${pathname === '/' ? 'font-semibold' : 'font-medium'}`}>
-              Home
-            </AppLink>
-            <AppLink href="/blog" className={`text-gray-700 hover:text-blue-600 ${pathname === '/blog' || pathname?.startsWith('/blog/') ? 'font-semibold' : 'font-medium'}`}>
-              Blog
-            </AppLink>
-            <AppLink href="/products" className={`text-gray-700 hover:text-blue-600 ${pathname === '/products' ? 'font-semibold' : 'font-medium'}`}>
-              Products
-            </AppLink>
-            <AppLink href="/contact" className={`text-gray-700 hover:text-blue-600 ${pathname === '/contact' ? 'font-semibold' : 'font-medium'}`}>
-              Contact
-            </AppLink>
-            <AppLink href="/about" className={`text-gray-700 hover:text-blue-600 ${pathname === '/about' ? 'font-semibold' : 'font-medium'}`}>
-              About
-            </AppLink>
+          
+          <nav className={`nav ${isMenuOpen ? 'active' : ''}`}>
+            <ul className="nav-list">
+              <li className="nav-item">
+                <Link 
+                  href="/" 
+                  className={`nav-link ${isActive('/')}`} 
+                  onClick={closeMenu}
+                >
+                  Home
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link 
+                  href="/about" 
+                  className={`nav-link ${isActive('/about')}`}
+                  onClick={closeMenu}
+                >
+                  About
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link 
+                  href="/contact" 
+                  className={`nav-link ${isActive('/contact')}`}
+                  onClick={closeMenu}
+                >
+                  Contact
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link 
+                  href="/blog" 
+                  className={`nav-link ${isActive('/blog')}`}
+                  onClick={closeMenu}
+                >
+                  Blog
+                </Link>
+              </li>
+            </ul>
           </nav>
-        </div>
-
-        {/* Mobile menu */}
-        <div className={`md:hidden ${isMenuOpen ? 'block' : 'hidden'} pb-4`}>
-          <nav className="flex flex-col space-y-4">
-            <AppLink href="/" className={`text-gray-700 hover:text-blue-600 ${pathname === '/' ? 'font-semibold' : 'font-medium'}`}>
-              Home
-            </AppLink>
-            <AppLink href="/blog" className={`text-gray-700 hover:text-blue-600 ${pathname === '/blog' || pathname?.startsWith('/blog/') ? 'font-semibold' : 'font-medium'}`}>
-              Blog
-            </AppLink>
-            <AppLink href="/products" className={`text-gray-700 hover:text-blue-600 ${pathname === '/products' ? 'font-semibold' : 'font-medium'}`}>
-              Products
-            </AppLink>
-            <AppLink href="/contact" className={`text-gray-700 hover:text-blue-600 ${pathname === '/contact' ? 'font-semibold' : 'font-medium'}`}>
-              Contact
-            </AppLink>
-            <AppLink href="/about" className={`text-gray-700 hover:text-blue-600 ${pathname === '/about' ? 'font-semibold' : 'font-medium'}`}>
-              About
-            </AppLink>
-          </nav>
+          
+          <a href="https://www.tkqlhce.com/click-9083409-15435040" className="btn btn-primary btn-sm">
+            Get Started
+          </a>
         </div>
       </div>
     </header>

@@ -1,3 +1,6 @@
+'use client';
+
+import { useState } from 'react';
 import AppImage from '@/components/shared/AppImage';
 import AppLink from '@/components/shared/AppLink';
 
@@ -16,34 +19,42 @@ interface BlogPostCardProps {
 }
 
 export default function BlogPostCard({ post }: BlogPostCardProps) {
+  const [imgSrc, setImgSrc] = useState(post.coverImage || '/images/blog/default-cover.svg');
+  
+  // Handle image load error
+  const handleImageError = () => {
+    setImgSrc('/images/blog/default-cover.svg');
+  };
+  
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:-translate-y-1 hover:shadow-lg">
-      <div className="relative h-48">
+    <div className="blog-card">
+      <div className="blog-image-container">
         <AppImage 
-          src={post.coverImage || '/images/blog/default-cover.jpg'}
+          src={imgSrc}
           alt={post.title} 
           fill
-          className="object-cover"
+          className="blog-image"
+          onError={handleImageError}
         />
       </div>
       
-      <div className="p-5">
-        <span className="inline-block px-3 py-1 text-xs font-semibold text-blue-800 bg-blue-100 rounded-full mb-3">
+      <div className="blog-content">
+        <span className="blog-category">
           {post.category}
         </span>
         <AppLink href={`/blog/${post.slug}`}>
-          <h3 className="text-xl font-bold mb-2 text-gray-800 hover:text-blue-600">{post.title}</h3>
+          <h3 className="blog-title">{post.title}</h3>
         </AppLink>
-        <p className="text-gray-600 mb-4 line-clamp-2">{post.excerpt}</p>
+        <p className="blog-excerpt">{post.excerpt}</p>
         
-        <div className="flex items-center justify-between">
-          <time className="text-sm text-gray-500">{post.date}</time>
+        <div className="blog-footer">
+          <time className="blog-date">{post.date}</time>
           <AppLink 
             href={`/blog/${post.slug}`}
-            className="text-blue-600 font-medium hover:text-blue-800 flex items-center"
+            className="blog-read-more"
           >
             Read more
-            <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="blog-arrow-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
           </AppLink>

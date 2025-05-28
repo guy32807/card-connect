@@ -1,27 +1,25 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  // Enable static export for GitHub Pages
-  output: 'export',
-  // Set the base path for GitHub Pages
-  basePath: process.env.NODE_ENV === 'production' ? '/card-connect' : '',
-  // Set asset prefix for GitHub Pages
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/card-connect' : '',
-  // Remove trailing slash from assetPrefix
-  
-  // Keep the ESLint and TypeScript settings to ensure build success
+  output: 'export',  // Required for static site generation for GitHub Pages
+  images: {
+    unoptimized: true,  // Required for 'export'
+    domains: [],
+    formats: ['image/webp'],
+    // Allow SVG
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+  },
+  // Updated base path for GitHub Pages
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
   eslint: {
     ignoreDuringBuilds: true,
   },
   typescript: {
     ignoreBuildErrors: true
   },
-  // GitHub Pages doesn't support some features
-  images: {
-    unoptimized: true,
-  },
-  // Ensure static assets are correctly processed
-  trailingSlash: false
+  // Fix trailing slash issues when deployed to GitHub Pages
+  trailingSlash: true,
 }
 
 module.exports = nextConfig

@@ -1,38 +1,56 @@
-import Image, { ImageProps } from 'next/image';
-import { getBasePath } from '@/utils/path';
+'use client';
 
-type AppImageProps = Omit<ImageProps, 'src'> & {
-  src: string | null | undefined;
-};
+import Image from 'next/image';
 
-export default function AppImage({ src, ...props }: AppImageProps) {
-  // Handle undefined or null src
-  if (!src) {
-    // Provide a fallback image or return null
+interface AppImageProps {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  fill?: boolean;
+  className?: string;
+  onError?: () => void;
+}
+
+export default function AppImage({ 
+  src, 
+  alt, 
+  width, 
+  height, 
+  fill = false,
+  className = '',
+  onError
+}: AppImageProps) {
+  // Handle missing src
+  const imageSrc = src || '/images/blog/default-cover.svg';
+  
+  // Common props
+  const imageProps = {
+    src: imageSrc,
+    alt,
+    className,
+    onError: onError
+  };
+
+  // If fill is true, use fill mode
+  if (fill) {
     return (
-      <div 
-        className={`bg-gray-200 flex items-center justify-center ${props.className || ''}`}
-        style={{ 
-          width: props.width || '100%', 
-          height: props.height || '100%',
-          position: props.fill ? 'absolute' : 'relative',
-          inset: props.fill ? 0 : 'auto'
-        }}
-      >
-        <span className="text-gray-400">No Image</span>
+      <div className="image-container">
+        <Image 
+          {...imageProps}
+          fill 
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" 
+        />
       </div>
     );
   }
-  
-  const fullSrc = src.startsWith('/') 
-    ? `${getBasePath()}${src}` 
-    : src;
-  
-  // Remove width and height if fill is true
-  if (props.fill) {
-    const { width, height, ...restProps } = props;
-    return <Image {...restProps} src={fullSrc} />;
-  }
-  
-  return <Image {...props} src={fullSrc} />;
+
+  // Otherwise, use explicit dimensions
+  return (
+    <Image 
+      {...imageProps}
+      width={width || 300} 
+      height={height || 200} 
+    />
+  );
 }
